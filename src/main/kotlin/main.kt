@@ -2,9 +2,9 @@ import com.google.common.math.Quantiles
 import org.jetbrains.teamcity.rest.*
 
 val teamcity = TeamCityInstanceFactory.httpAuth(
-        System.getProperty("teamcity"),
-        System.getProperty("system.pin.builds.user.name"),
-        System.getProperty("system.pin.builds.user.password"))
+        System.getProperty("teamcity") ?: System.getenv("teamcity"),
+        System.getProperty("user") ?: System.getenv("user"),
+        System.getProperty("password") ?: System.getenv("user"))
 
 val format = "%.0f"
 
