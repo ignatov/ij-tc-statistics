@@ -1,12 +1,12 @@
 import com.google.common.math.Quantiles
 import org.jetbrains.teamcity.rest.*
 
-val teamcity = TeamCityInstanceFactory.httpAuth(
+private val teamcity = TeamCityInstanceFactory.httpAuth(
         System.getProperty("teamcity") ?: System.getenv("teamcity"),
         System.getProperty("user") ?: System.getenv("user"),
         System.getProperty("password") ?: System.getenv("password"))
 
-val format = "%.0f"
+private val format = "%.0f"
 
 fun main(args: Array<String>) {
     val allDuration = mutableListOf<Long>()
@@ -59,6 +59,6 @@ private fun testConfigurations() =
                 .fetchBuildConfigurations()
                 .filter { !blackList.contains(it.id.stringId) }
 
-fun printStatistics(key: String, value: String) {
+private fun printStatistics(key: String, value: String) {
     println("##teamcity[buildStatisticValue key='$key' value='$value']")
 }
