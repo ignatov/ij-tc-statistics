@@ -4,7 +4,7 @@ import org.jetbrains.teamcity.rest.*
 val teamcity = TeamCityInstanceFactory.httpAuth(
         System.getProperty("teamcity") ?: System.getenv("teamcity"),
         System.getProperty("user") ?: System.getenv("user"),
-        System.getProperty("password") ?: System.getenv("user"))
+        System.getProperty("password") ?: System.getenv("password"))
 
 val format = "%.0f"
 
