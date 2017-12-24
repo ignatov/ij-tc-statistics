@@ -41,7 +41,7 @@ private fun calcStatistics(prefix: String, diff: List<Long>) {
 }
 
 private fun configurationBuilds(id: BuildConfigurationId): List<Build> {
-    val list = teamcity.builds().fromConfiguration(id).withStatus(BuildStatus.SUCCESS).limitResults(40).list()
+    val list = teamcity.builds().fromConfiguration(id).withAnyStatus().limitResults(40).list()
     println("${list.size} ${id.stringId}")
     return list
 }
