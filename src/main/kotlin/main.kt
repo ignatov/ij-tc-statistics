@@ -1,5 +1,8 @@
 import com.google.common.math.Quantiles
-import org.jetbrains.teamcity.rest.*
+import org.jetbrains.teamcity.rest.Build
+import org.jetbrains.teamcity.rest.BuildConfigurationId
+import org.jetbrains.teamcity.rest.ProjectId
+import org.jetbrains.teamcity.rest.TeamCityInstanceFactory
 
 private val teamcity = TeamCityInstanceFactory.httpAuth(
         System.getProperty("teamcity") ?: System.getenv("teamcity"),
@@ -9,9 +12,9 @@ private val teamcity = TeamCityInstanceFactory.httpAuth(
 private val format = "%.0f"
 
 fun main(args: Array<String>) {
-    val allDuration = mutableListOf<Long>()
-    val buildDuration = mutableListOf<Long>()
-    val queueDuration = mutableListOf<Long>()
+    val allDuration = mutableMapOf<String, Long>()
+    val buildDuration = mutableMapOf<String, Long>()
+    val queueDuration = mutableMapOf<String, Long>()
 
     val builds = testConfigurations().flatMap { configurationBuilds(it.id) }
 
@@ -20,9 +23,9 @@ fun main(args: Array<String>) {
         val s = b.fetchStartDate().time
         val f = b.fetchFinishDate().time
 
-        allDuration.add(f - q)
-        buildDuration.add(f - s)
-        queueDuration.add(s - q)
+        allDuration.put(b.buildTypeId.stringId, f - q)
+        buildDuration.put(b.buildTypeId.stringId, f - s)
+        queueDuration.put(b.buildTypeId.stringId, s - q)
     }
 
     calcStatistics("Total time", allDuration)
@@ -30,14 +33,18 @@ fun main(args: Array<String>) {
     calcStatistics("Queue time", queueDuration)
 }
 
-private fun calcStatistics(prefix: String, diff: List<Long>) {
+private fun calcStatistics(prefix: String, map: Map<String, Long>) {
+    println()
+    val top = map.entries.sortedBy({ entry -> -entry.value }).first()
+    println(top.key + " " + top.value)
+
+    val diff = map.values
     printStatistics(prefix + ": max, ms", format.format(diff.max()!! * 1.0))
     printStatistics(prefix + ": min, ms", format.format(diff.min()!! * 1.0))
     printStatistics(prefix + ": avg, ms", format.format(diff.average()))
     for (i in arrayOf(90, 80, 70, 60, 50)) {
         printStatistics(prefix + ": ${i}th percentile, ms", format.format(Quantiles.percentiles().index(i).compute(diff)))
     }
-    println()
 }
 
 private fun configurationBuilds(id: BuildConfigurationId): List<Build> {
