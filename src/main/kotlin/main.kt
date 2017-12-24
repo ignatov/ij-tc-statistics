@@ -3,6 +3,7 @@ import org.jetbrains.teamcity.rest.Build
 import org.jetbrains.teamcity.rest.BuildConfigurationId
 import org.jetbrains.teamcity.rest.ProjectId
 import org.jetbrains.teamcity.rest.TeamCityInstanceFactory
+import java.util.*
 
 private val teamcity = TeamCityInstanceFactory.httpAuth(
         System.getProperty("teamcity") ?: System.getenv("teamcity"),
@@ -48,7 +49,10 @@ private fun calcStatistics(prefix: String, map: Map<String, Long>) {
 }
 
 private fun configurationBuilds(id: BuildConfigurationId): List<Build> {
-    val list = teamcity.builds().fromConfiguration(id).withAnyStatus().limitResults(40).list()
+    val yesterday = GregorianCalendar()
+    yesterday.add(Calendar.DAY_OF_MONTH, -1)
+    
+    val list = teamcity.builds().fromConfiguration(id).withAnyStatus().sinceDate(yesterday.time).list()
     println("${list.size} ${id.stringId}")
     return list
 }
