@@ -6,9 +6,11 @@ import org.jetbrains.teamcity.rest.TeamCityInstanceFactory
 import java.util.*
 
 private val teamcity = TeamCityInstanceFactory.httpAuth(
-        System.getProperty("teamcity") ?: System.getenv("teamcity"),
-        System.getProperty("user") ?: System.getenv("user"),
-        System.getProperty("password") ?: System.getenv("password"))
+        property("teamcity"),
+        property("user"),
+        property("password"))
+
+private fun property(key: String) = System.getProperty(key) ?: System.getenv(key)
 
 private val format = "%.0f"
 
@@ -50,7 +52,7 @@ private fun calcStatistics(prefix: String, map: Map<String, Long>) {
 private fun configurationBuilds(id: BuildConfigurationId): List<Build> {
     val yesterday = GregorianCalendar()
     yesterday.add(Calendar.DAY_OF_MONTH, -1)
-    
+
     val list = teamcity.builds().fromConfiguration(id).withAnyStatus().sinceDate(yesterday.time).list()
     println("${list.size} ${id.stringId}")
     return list
