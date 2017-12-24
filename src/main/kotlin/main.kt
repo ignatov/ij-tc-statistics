@@ -35,7 +35,6 @@ fun main(args: Array<String>) {
 }
 
 private fun calcStatistics(prefix: String, map: Map<String, Long>) {
-    println()
     val top = map.entries.sortedBy({ entry -> -entry.value }).first()
     println("##teamcity[message text='The Worth $prefix for: ${top.key} is ${top.value}' status='WARNING']")
 
