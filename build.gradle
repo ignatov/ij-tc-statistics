@@ -38,6 +38,11 @@ compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
 
+task queue(type: JavaExec, dependsOn: classes) {
+    main = "QueueKt"
+    classpath = sourceSets.main.runtimeClasspath
+}
+
 tasks.withType(JavaExec) {
     systemProperties System.properties
 }

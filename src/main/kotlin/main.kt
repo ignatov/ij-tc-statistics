@@ -5,7 +5,7 @@ import org.jetbrains.teamcity.rest.ProjectId
 import org.jetbrains.teamcity.rest.TeamCityInstanceFactory
 import java.util.*
 
-private val teamcity = TeamCityInstanceFactory.httpAuth(
+internal val teamcity = TeamCityInstanceFactory.httpAuth(
         property("teamcity"),
         property("user"),
         property("password"))
@@ -71,6 +71,6 @@ private fun testConfigurations() =
                 .fetchBuildConfigurations()
                 .filter { !blackList.contains(it.id.stringId) }
 
-private fun printStatistics(key: String, value: String) {
+internal fun printStatistics(key: String, value: String) {
     println("##teamcity[buildStatisticValue key='$key' value='$value']")
 }
