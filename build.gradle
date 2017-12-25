@@ -13,9 +13,6 @@ group 'ij.tc'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'kotlin'
-apply plugin: 'application'
-
-mainClassName = "MainKt"
 
 sourceCompatibility = 1.8
 
@@ -40,6 +37,11 @@ compileTestKotlin {
 
 task queue(type: JavaExec, dependsOn: classes) {
     main = "QueueKt"
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+task statistics(type: JavaExec, dependsOn: classes) {
+    main = "MainKt"
     classpath = sourceSets.main.runtimeClasspath
 }
 
