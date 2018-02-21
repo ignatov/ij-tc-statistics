@@ -3,6 +3,7 @@ import org.jetbrains.teamcity.rest.ProjectId
 fun main(args: Array<String>) {
     reportQueue("ijplatform_master_Idea")
     reportQueue("ijplatform_master_Idea_Tests")
+    reportQueue("ijplatform_master_CIDR_CLion")
     reportQueue()
 }
 
